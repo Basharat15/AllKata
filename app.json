@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "allKata",
+    "slug": "allKata",
+    "version": "49.0.9",
+    "orientation": "portrait",
+    "icon": "./assets/icon2.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/MainSplash1.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.junaidanwar.allKata"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9b454a17-9a66-4e43-ab3d-cb01b9d82f68"
+      }
+    },
+    "owner": "junaidanwar"
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-1446863291124897~9049731494"
+  }
+}
