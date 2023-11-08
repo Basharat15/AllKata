@@ -229,7 +229,7 @@ const EmployeesDetailsView = ({ route }) => {
             color: "gray",
           }}
         >
-          {user.username}'s Working Hours
+          {selectedData.workerName}'s Working Hours
         </Text>
 
         <View
