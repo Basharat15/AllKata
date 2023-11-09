@@ -236,7 +236,7 @@ const Home = () => {
             >
               Your Companies:
             </Text>
-            {!userData.companies ? (
+            {user?.companies?.length === 0 ? (
               <View
                 style={{
                   flex: 1,
