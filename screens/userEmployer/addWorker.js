@@ -16,21 +16,9 @@ import InputText from "../../component/inputText";
 import SelectDropdown from "react-native-select-dropdown";
 import { RadioButton } from "react-native-paper";
 import firebase from "../../libs/firebase";
-
-// firebase things
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  getDocs,
-  doc,
-} from "firebase/firestore";
-import { getFirestore, updateDoc } from "firebase/firestore";
 import Add from "react-native-vector-icons/Ionicons";
 import Warning from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/actions/user";
 import Arrow from "react-native-vector-icons/MaterialIcons";
@@ -840,7 +828,7 @@ const AddWorker = () => {
                         marginTop: 3,
                       }}
                     >
-                      <TouchableOpacity
+                      <View
                         style={{
                           alignSelf: "center",
                           width: "97%",
@@ -878,7 +866,7 @@ const AddWorker = () => {
                           size={20}
                           color="white"
                         />
-                      </TouchableOpacity>
+                      </View>
                     </View>
                   )}
                   keyExtractor={(item, index) => item.workerName + index}
