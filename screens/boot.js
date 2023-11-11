@@ -5,6 +5,8 @@ import {
   Dimensions,
   StyleSheet,
   TouchableOpacity,
+  Alert,
+  BackHandler,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native";
@@ -24,17 +26,34 @@ const Boot = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const checkInternetConnection = () => {
     const removeNetInfoSubscription = NetInfo.addEventListener((state) => {
       const conn = state.isConnected; //boolean value whether internet connected or not
       console.log("Connection type", state.type); //gives the connection type
-      !conn ? alert("No Internet Connection!") : null; //alert if internet not connected
+      !conn
+        ? Alert.alert("Sorry !", "You don't have internet connection?", [
+            {
+              text: "Retry",
+              onPress: () => {
+                checkInternetConnection, getUserData;
+              },
+              style: "cancel",
+            },
+            {
+              text: "Exit",
+              onPress: () => {
+                BackHandler.exitApp();
+              },
+            },
+          ])
+        : null; //alert if internet not connected
     });
 
     return () => removeNetInfoSubscription();
-  }, []);
+  };
   React.useEffect(() => {
     setTimeout(() => {
+      checkInternetConnection();
       getUserData();
     }, 3000);
   });
@@ -50,6 +69,9 @@ const Boot = ({ route }) => {
         .then((res) => {
           let data = res.data();
           dispatch(setUser(data));
+        })
+        .catch((err) => {
+          Alert.alert("Error", err.message);
         });
       navigation.replace("userIndex");
     } else {

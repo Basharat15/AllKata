@@ -1,11 +1,3 @@
-// import {
-//   InterstitialAd,
-//   TestIds,
-//   AdEventType,
-//   BannerAd,
-// } from "react-native-google-mobile-ads";
-// import {BannerAd} from 'react-native-google-mobile-ads';
-// import { AppOpenAd, TestIds, AdEventType } from 'react-native-google-mobile-ads';
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -20,6 +12,13 @@ import {
   Image,
 } from "react-native";
 import "expo-dev-client";
+import {
+  AppOpenAd,
+  TestIds,
+  AdEventType,
+  BannerAd,
+  BannerAdSize,
+} from "react-native-google-mobile-ads";
 import Banner from "../../component/BannerAdd";
 import HeaderView from "../../component/headerView";
 import theme from "../../component/theme";
@@ -284,10 +283,11 @@ const AddCompany = () => {
             </LinearGradient>
           </View>
         ) : (
-          <View style={{ padding: 10 }}>
+          <View style={{ padding: 10, paddingBottom: 50 }}>
             {companies.length ? (
               <FlatList
                 data={companies}
+                showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => (
                   <View
                     style={{
@@ -365,6 +365,30 @@ const AddCompany = () => {
             )}
           </View>
         )}
+      </View>
+      <View
+        style={{
+          alignItems: "center",
+          backgroundColor: theme.colors.backgroundColor,
+        }}
+      >
+        <BannerAd
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          unitId={TestIds.BANNER}
+          // unitId="ca-app-pub-4076663681520797/9371478623"
+          onAdLoaded={() => {
+            console.log("Advert loaded");
+          }}
+          onAdFailedToLoad={(error) => {
+            console.error("Advert failed to load: ", error);
+          }}
+          onAdOpened={() => {
+            console.log("ad openend");
+          }}
+        />
       </View>
     </View>
   );

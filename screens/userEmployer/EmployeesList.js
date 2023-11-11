@@ -27,6 +27,13 @@ import {
   useRoute,
   validatePathConfig,
 } from "@react-navigation/native";
+import {
+  AppOpenAd,
+  TestIds,
+  AdEventType,
+  BannerAd,
+  BannerAdSize,
+} from "react-native-google-mobile-ads";
 import { FlatList } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/actions/user";
@@ -153,6 +160,7 @@ const EmployeesList = () => {
         {filteredList.length ? (
           <FlatList
             data={filteredList}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <View
                 style={{
@@ -230,6 +238,30 @@ const EmployeesList = () => {
             </Text>
           </View>
         )}
+      </View>
+      <View
+        style={{
+          alignItems: "center",
+          backgroundColor: theme.colors.backgroundColor,
+        }}
+      >
+        <BannerAd
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          unitId={TestIds.BANNER}
+          // unitId="ca-app-pub-4076663681520797/9916072405"
+          onAdLoaded={() => {
+            console.log("Advert loaded");
+          }}
+          onAdFailedToLoad={(error) => {
+            console.error("Advert failed to load: ", error);
+          }}
+          onAdOpened={() => {
+            console.log("ad openend");
+          }}
+        />
       </View>
     </View>
   );

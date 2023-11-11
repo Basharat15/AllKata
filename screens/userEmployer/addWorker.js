@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +9,13 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  AppOpenAd,
+  TestIds,
+  AdEventType,
+  BannerAd,
+  BannerAdSize,
+} from "react-native-google-mobile-ads";
 import HeaderView from "../../component/headerView";
 import theme from "../../component/theme";
 import { LinearGradient } from "expo-linear-gradient";
@@ -23,6 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/actions/user";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import TimePicker from "../../component/TimePicker";
+import { ScrollView } from "react-native-gesture-handler";
 
 const AddWorker = () => {
   const navigation = useNavigation();
@@ -250,7 +258,7 @@ const AddWorker = () => {
       <HeaderView pageName="Add Worker" />
       <View style={{ flex: 1, backgroundColor: theme.colors.backgroundColor }}>
         {ViewType && (
-          <View>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View
               style={{
                 flexDirection: "row",
@@ -666,7 +674,7 @@ const AddWorker = () => {
                 }}
               />
             </View>
-          </View>
+          </ScrollView>
         )}
         {newWorker && (
           <View>
@@ -999,10 +1007,11 @@ const AddWorker = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ padding: 10 }}>
+            <View style={{ padding: 10, paddingBottom: 100 }}>
               {workers.length ? (
                 <FlatList
                   data={workers}
+                  showsVerticalScrollIndicator={false}
                   renderItem={({ item, index }) => (
                     <View
                       style={{
@@ -1083,6 +1092,30 @@ const AddWorker = () => {
           </View>
         )}
         {/* ....................New WorkerView....................... */}
+      </View>
+      <View
+        style={{
+          alignItems: "center",
+          backgroundColor: theme.colors.backgroundColor,
+        }}
+      >
+        <BannerAd
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          unitId={TestIds.BANNER}
+          // unitId="ca-app-pub-4076663681520797/7833916113"
+          onAdLoaded={() => {
+            console.log("Advert loaded");
+          }}
+          onAdFailedToLoad={(error) => {
+            console.error("Advert failed to load: ", error);
+          }}
+          onAdOpened={() => {
+            console.log("ad openend");
+          }}
+        />
       </View>
     </View>
   );

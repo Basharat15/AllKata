@@ -27,9 +27,12 @@ import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { useNavigation } from "@react-navigation/native";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/actions/user";
 
 const Otp = ({ route }) => {
   // const [number, setNumber] = React.useState("");
+  const dispatch = useDispatch();
   const [loading, setLoading] = React.useState(false);
   const [token, setToken] = React.useState(null);
   const navigation = useNavigation();
@@ -70,6 +73,24 @@ const Otp = ({ route }) => {
         console.log(e);
       });
   };
+  const getUserData = async (userId) => {
+    try {
+      await firebase
+        .firestore()
+        .collection("Users")
+        .doc(userId)
+        .get()
+        .then((res) => {
+          let data = res.data();
+
+          dispatch(setUser(data));
+        });
+    } catch {
+      (err) => {
+        console.log("Error", err);
+      };
+    }
+  };
 
   const VarifyOtp = async () => {
     if (Tokentext.length < 6) {
@@ -86,8 +107,10 @@ const Otp = ({ route }) => {
               "username",
               userCridintial.user.displayName
             )
+
               .then(() => {
                 console.log("username saved on page otp");
+                getUserData(userCridintial.user.uid);
               })
               .catch((error) =>
                 console.log("the error is on otp secure store", error)

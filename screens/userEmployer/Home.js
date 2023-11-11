@@ -11,9 +11,15 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  BackHandler,
 } from "react-native";
+import {
+  TestIds,
+  AdEventType,
+  InterstitialAd,
+} from "react-native-google-mobile-ads";
 import { Picker } from "@react-native-picker/picker";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Add from "react-native-vector-icons/Ionicons";
 import User from "react-native-vector-icons/AntDesign";
 import Arrow from "react-native-vector-icons/MaterialIcons";
@@ -23,10 +29,11 @@ import firebase from "../../libs/firebase";
 import theme from "../../component/theme";
 import { FlatList } from "react-native-gesture-handler";
 import NetInfo from "@react-native-community/netinfo";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../store/actions/user";
 const Home = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const width = Dimensions.get("window").width;
   const height = Dimensions.get("window").height;
   const [name, setName] = useState("");
@@ -40,10 +47,74 @@ const Home = () => {
   );
   const [compnayList, setCompanyList] = useState([]);
   const [userData, setUserData] = useState({});
+  const [loaded, setLoaded] = useState(false);
+  const [interstitial, setInterstitial] = useState(null);
   const user = useSelector((state) => state.userReducer.user);
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+  const adUnitId = __DEV__
+    ? TestIds.INTERSTITIAL
+    : "ca-app-pub-4076663681520797/1411977990";
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("ad loading!");
+      const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+        requestNonPersonalizedAdsOnly: true,
+        keywords: ["fashion", "clothing"],
+      });
+      setInterstitial(interstitial);
+      const unsubscribe = interstitial.addAdEventListener(
+        AdEventType.LOADED,
+        () => {
+          setLoaded(true);
+          console.log("ad loaded!");
+        }
+      );
+      interstitial.addAdEventListener(AdEventType.CLOSED, () => {
+        BackHandler.exitApp();
+      });
+      interstitial.addAdEventListener(AdEventType.ERROR, () => {
+        BackHandler.exitApp();
+      });
+      // Start loading the interstitial straight away
+      interstitial.load();
+      // Unsubscribe from events on unmount
+      return () => unsubscribe();
+    }, [navigation])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        Alert.alert("Hold on!", "Are you sure you want to exit the app?", [
+          {
+            text: "Cancel",
+            onPress: () => null,
+            style: "cancel",
+          },
+          {
+            text: "YES",
+            onPress: () => {
+              if (interstitial?.loaded) {
+                interstitial?.show();
+              } else {
+                BackHandler.exitApp();
+              }
+            },
+          },
+        ]);
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", backAction);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", backAction);
+    }, [])
+  );
+
   useEffect(() => {
     const removeNetInfoSubscription = NetInfo.addEventListener((state) => {
       const conn = state.isConnected; //boolean value whether internet connected or not
@@ -57,6 +128,7 @@ const Home = () => {
 
     return () => removeNetInfoSubscription();
   }, []);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getUserData();
