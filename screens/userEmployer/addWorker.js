@@ -22,6 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/actions/user";
 import Arrow from "react-native-vector-icons/MaterialIcons";
+import TimePicker from "../../component/TimePicker";
 
 const AddWorker = () => {
   const navigation = useNavigation();
@@ -43,6 +44,10 @@ const AddWorker = () => {
   const [newWorker, setNewWorker] = useState(true);
   const [ViewType, setViewType] = useState(false);
   const [list, setList] = useState(false);
+  const [startTimeModal, setStartTimeModal] = useState(false);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [endTimeModal, setEndTimeModal] = useState(false);
 
   useEffect(() => {
     getUserData();
@@ -56,6 +61,8 @@ const AddWorker = () => {
       setCompanyName("");
       setWorkHours("");
       setWages("");
+      setStartTime("");
+      setEndTime("");
       setViewType(false);
       setNewWorker(true);
       setList(false);
@@ -86,24 +93,32 @@ const AddWorker = () => {
   };
 
   const addWorkerHours = async () => {
-    if (
-      !WorkHours.length ||
-      !BreakTime.length ||
-      !Companyname.length ||
-      !wages.length
-    ) {
+    if (!WorkHours || !BreakTime || !Companyname || !wages) {
       alert("Please Fill all the required fields");
       return;
     } else {
       workersArray = workers.map((item) => {
         return item.workerName;
       });
+
+      if (BreakTime > WorkHours) {
+        alert("Break time can not be greater than work hours!");
+        return;
+      }
+      let totalHours =
+        value === "Paid"
+          ? parseFloat(WorkHours)
+          : parseFloat(WorkHours) - parseFloat(BreakTime);
+
       const newData = {
+        grossHours: WorkHours,
+        startTime: startTime,
+        endTime: endTime,
         timestamp: Date.now(),
         workerName: workerNameDrop,
         Companyname: Companyname,
         BreakTime: Number(BreakTime),
-        WorkHours: Number(WorkHours),
+        WorkHours: Number(totalHours),
         breakType: value,
         wagesPH: Number(wages),
         userId: user.userId,
@@ -249,7 +264,7 @@ const AddWorker = () => {
               }}
             >
               <TouchableOpacity
-                disabled={newWorker ? true : false}
+                disabled={ViewType ? true : false}
                 onPress={() => {
                   setViewType(true);
                   setNewWorker(false);
@@ -391,12 +406,151 @@ const AddWorker = () => {
                   return item;
                 }}
               />
-              <InputText
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    paddingHorizontal: 5,
+                    fontStyle: "italic",
+                    fontFamily: "monsterRegular",
+                    color: "gray",
+                    paddingTop: 5,
+                  }}
+                >
+                  Total Hours of work
+                </Text>
+                <Text style={{ color: "red", padding: 5 }}> *</Text>
+              </View>
+              {WorkHours && (
+                <Text
+                  style={{
+                    fontSize: 16,
+                    paddingHorizontal: 5,
+                    fontStyle: "italic",
+                    fontFamily: "monsterBold",
+                    fontWeight: "bold",
+                    color: "red",
+                    marginTop: -5,
+                  }}
+                >
+                  {parseFloat(WorkHours).toFixed(2) + "  Hours"}
+                </Text>
+              )}
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 5,
+                }}
+              >
+                <LinearGradient
+                  // Background Linear Gradient
+                  colors={[
+                    theme.colors.updatedColor,
+                    theme.colors.updatedColor,
+                  ]}
+                  style={{
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                    width: "45%",
+                    height: 35,
+                    borderRadius: 10,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      setStartTimeModal(true);
+                    }}
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 35,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "monsterBold",
+                        fontSize: 12,
+                        color: "white",
+                      }}
+                    >
+                      {!startTime
+                        ? "Start Time"
+                        : startTime.toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                    </Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+
+                <LinearGradient
+                  // Background Linear Gradient
+                  colors={[
+                    theme.colors.updatedColor,
+                    theme.colors.updatedColor,
+                  ]}
+                  style={{
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                    width: "45%",
+                    height: 35,
+                    borderRadius: 10,
+                    // marginTop: "2%",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      setEndTimeModal(true);
+                    }}
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 35,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "monsterBold",
+                        fontSize: 12,
+                        color: "white",
+                      }}
+                    >
+                      {!endTime
+                        ? "End Time"
+                        : endTime.toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                    </Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              </View>
+              {/* <InputText
                 keyboardType="numeric"
                 value={WorkHours}
                 Title="Total Hours of work"
                 onChangeText={(text) => setWorkHours(text)}
-              />
+              /> */}
               <InputText
                 keyboardType="numeric"
                 value={BreakTime}
@@ -483,6 +637,34 @@ const AddWorker = () => {
                   </Text>
                 </TouchableOpacity>
               </LinearGradient>
+              <TimePicker
+                isTimePickerVisible={startTimeModal}
+                onConfirm={(time) => {
+                  setStartTime(time);
+                  setStartTimeModal(false);
+                }}
+                onCancel={() => {
+                  setStartTimeModal(false);
+                }}
+              />
+              <TimePicker
+                isTimePickerVisible={endTimeModal}
+                onConfirm={(time) => {
+                  let differece =
+                    (new Date(time) - new Date(startTime)) / 3600000;
+                  if (differece <= 0) {
+                    setEndTimeModal(false);
+                    alert("End time cannot be less than start time!");
+                    return;
+                  }
+                  setWorkHours(differece);
+                  setEndTime(time);
+                  setEndTimeModal(false);
+                }}
+                onCancel={() => {
+                  setEndTimeModal(false);
+                }}
+              />
             </View>
           </View>
         )}
@@ -522,6 +704,7 @@ const AddWorker = () => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled={newWorker ? true : false}
                 onPress={() => {
                   setViewType(false);
                   setNewWorker(true);

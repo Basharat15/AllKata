@@ -22,6 +22,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import firebase from "../../libs/firebase";
 import theme from "../../component/theme";
 import { FlatList } from "react-native-gesture-handler";
+import NetInfo from "@react-native-community/netinfo";
 import { useSelector } from "react-redux";
 
 const Home = () => {
@@ -43,6 +44,19 @@ const Home = () => {
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+  useEffect(() => {
+    const removeNetInfoSubscription = NetInfo.addEventListener((state) => {
+      const conn = state.isConnected; //boolean value whether internet connected or not
+      console.log("Connection type", state.type); //gives the connection type
+      !conn
+        ? alert(
+            "No Internet Connection!\nThis app requires valid internet connection"
+          )
+        : null; //alert if internet not connected
+    });
+
+    return () => removeNetInfoSubscription();
+  }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getUserData();

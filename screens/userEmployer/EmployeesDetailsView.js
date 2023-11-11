@@ -129,21 +129,11 @@ const EmployeesDetailsView = ({ route }) => {
       return item.status === "unPaid" && item.Companyname === comName;
     });
     setUnpaidData(unPaidData);
-    let totalbtPaidAmount = 0;
-    let totalbtunPaidAmount = 0;
+    let totalAmount = 0;
     for (let i = 0; i < unPaidData.length; i++) {
-      if (unPaidData[i].breakType === "Paid") {
-        let totalbtPaidHours = 0;
-        totalbtPaidHours += unPaidData[i].WorkHours + unPaidData[i].BreakTime;
-        totalbtPaidAmount += totalbtPaidHours * unPaidData[i].wagesPH;
-      } else {
-        let totalbtunPaidHours = 0;
-        totalbtunPaidHours += unPaidData[i].WorkHours;
-        totalbtunPaidAmount += totalbtunPaidHours * unPaidData[i].wagesPH;
-      }
+      totalAmount += unPaidData[i].WorkHours * unPaidData[i].wagesPH;
     }
-    const totalUnPaidAmount = totalbtPaidAmount + totalbtunPaidAmount;
-    setTotalUnPaidAmount(totalUnPaidAmount);
+    setTotalUnPaidAmount(totalAmount);
   };
   const calculatePaidAmount = (data) => {
     const filteredWorkingData = data.workingHours.filter((item) => {
@@ -158,21 +148,12 @@ const EmployeesDetailsView = ({ route }) => {
       return item.status === "unPaid" && item.Companyname === comName;
     });
     setUnpaidData(unPaidData);
-    let totalbtPaidAmount = 0;
-    let totalbtunPaidAmount = 0;
+    let totalAmount = 0;
     for (let i = 0; i < paidData.length; i++) {
-      if (paidData[i].breakType === "Paid") {
-        let totalbtPaidHours = 0;
-        totalbtPaidHours += paidData[i].WorkHours + paidData[i].BreakTime;
-        totalbtPaidAmount += totalbtPaidHours * paidData[i].wagesPH;
-      } else {
-        let totalbtunPaidHours = 0;
-        totalbtunPaidHours += paidData[i].WorkHours;
-        totalbtunPaidAmount += totalbtunPaidHours * paidData[i].wagesPH;
-      }
+      totalAmount += paidData[i].WorkHours * paidData[i].wagesPH;
     }
-    const totalPaidAmount = totalbtPaidAmount + totalbtunPaidAmount;
-    setTotalPaidAmount(totalPaidAmount);
+
+    setTotalPaidAmount(totalAmount);
   };
   const getUserData = async () => {
     try {
@@ -376,7 +357,7 @@ const EmployeesDetailsView = ({ route }) => {
                     >
                       <View style={styles.main}>
                         <Text style={styles.title}>Work Hours</Text>
-                        <Text style={styles.chiled}>{item.WorkHours}</Text>
+                        <Text style={styles.chiled}>{item.grossHours}</Text>
                       </View>
                       <View style={styles.main}>
                         <Text style={styles.title}>Break Time</Text>
@@ -584,7 +565,7 @@ const EmployeesDetailsView = ({ route }) => {
                     >
                       <View style={styles.main}>
                         <Text style={styles.title}>Work Hours</Text>
-                        <Text style={styles.chiled}>{item.WorkHours}</Text>
+                        <Text style={styles.chiled}>{item.grossHours}</Text>
                       </View>
                       <View style={styles.main}>
                         <Text style={styles.title}>Break Time</Text>

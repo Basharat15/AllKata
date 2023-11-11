@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import theme from "../component/theme";
@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "../libs/firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "./store/actions/user";
+import NetInfo from "@react-native-community/netinfo";
 
 const Boot = ({ route }) => {
   const width = Dimensions.get("screen").width;
@@ -23,6 +24,15 @@ const Boot = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const removeNetInfoSubscription = NetInfo.addEventListener((state) => {
+      const conn = state.isConnected; //boolean value whether internet connected or not
+      console.log("Connection type", state.type); //gives the connection type
+      !conn ? alert("No Internet Connection!") : null; //alert if internet not connected
+    });
+
+    return () => removeNetInfoSubscription();
+  }, []);
   React.useEffect(() => {
     setTimeout(() => {
       getUserData();
