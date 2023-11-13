@@ -45,17 +45,9 @@ const Home = () => {
   const [selectCompany, setSelctedCompany] = useState(
     "Please select a company"
   );
-  const [compnayList, setCompanyList] = useState([]);
-  const [userData, setUserData] = useState({});
-  const adUnitId = __DEV__
-    ? TestIds.INTERSTITIAL
-    : "ca-app-pub-4076663681520797/1411977990";
-  const [interstitial, setInterstitial] = useState(
-    InterstitialAd.createForAdRequest(adUnitId, {
-      requestNonPersonalizedAdsOnly: true,
-      keywords: ["fashion", "clothing"],
-    })
-  );
+
+  // const adUnitId = TestIds.INTERSTITIAL;
+  const adUnitId = "ca-app-pub-1446863291124897/9824658781";
   const user = useSelector((state) => state.userReducer.user);
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -65,7 +57,6 @@ const Home = () => {
       requestNonPersonalizedAdsOnly: true,
       keywords: ["fashion", "clothing"],
     });
-    setInterstitial(interstitial);
     const unsubscribe = interstitial.addAdEventListener(
       AdEventType.LOADED,
       () => {
@@ -78,8 +69,7 @@ const Home = () => {
     interstitial.addAdEventListener(AdEventType.ERROR, (err) => {
       Alert.alert(
         "There is an error occured on loading interstitial ad!",
-        err.message,
-        err.name
+        err.message
       );
       // BackHandler.exitApp();
     });
@@ -146,7 +136,6 @@ const Home = () => {
         .get()
         .then((res) => {
           let data = res.data();
-          setUserData(data);
           dispatch(setUser(data));
         });
     } catch {

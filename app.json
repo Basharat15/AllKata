@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "allKata",
-    "slug": "allKata",
+    "name": "Time Vault",
+    "slug": "TimeVault",
     "version": "49.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon2.png",
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon2.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.junaidanwar.allKata"
@@ -43,6 +43,6 @@
     "owner": "junaidanwar"
   },
   "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-4076663681520797~2789758400"
+    "android_app_id": "ca-app-pub-1446863291124897~2974263681"
   }
 }

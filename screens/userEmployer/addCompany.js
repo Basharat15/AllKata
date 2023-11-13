@@ -377,8 +377,8 @@ const AddCompany = () => {
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,
           }}
-          unitId={TestIds.BANNER}
-          // unitId="ca-app-pub-4076663681520797/9371478623"
+          // unitId={TestIds.BANNER}
+          unitId="ca-app-pub-1446863291124897/5877674915"
           onAdLoaded={() => {
             console.log("Advert loaded");
           }}
