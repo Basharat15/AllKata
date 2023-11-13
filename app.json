@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/icon2.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.junaidanwar.allKata"
+      "package": "com.junaidanwar.allKata",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
