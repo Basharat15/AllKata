@@ -47,43 +47,48 @@ const Home = () => {
   );
   const [compnayList, setCompanyList] = useState([]);
   const [userData, setUserData] = useState({});
-  const [loaded, setLoaded] = useState(false);
-  const [interstitial, setInterstitial] = useState(null);
+  const adUnitId = __DEV__
+    ? TestIds.INTERSTITIAL
+    : "ca-app-pub-4076663681520797/1411977990";
+  const [interstitial, setInterstitial] = useState(
+    InterstitialAd.createForAdRequest(adUnitId, {
+      requestNonPersonalizedAdsOnly: true,
+      keywords: ["fashion", "clothing"],
+    })
+  );
   const user = useSelector((state) => state.userReducer.user);
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
-  const adUnitId = __DEV__
-    ? TestIds.INTERSTITIAL
-    : "ca-app-pub-4076663681520797/1411977990";
-
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("ad loading!");
-      const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-        requestNonPersonalizedAdsOnly: true,
-        keywords: ["fashion", "clothing"],
-      });
-      setInterstitial(interstitial);
-      const unsubscribe = interstitial.addAdEventListener(
-        AdEventType.LOADED,
-        () => {
-          setLoaded(true);
-          console.log("ad loaded!");
-        }
+  const adLoad = () => {
+    const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+      requestNonPersonalizedAdsOnly: true,
+      keywords: ["fashion", "clothing"],
+    });
+    setInterstitial(interstitial);
+    const unsubscribe = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        interstitial?.show();
+      }
+    );
+    interstitial.addAdEventListener(AdEventType.CLOSED, () => {
+      BackHandler.exitApp();
+    });
+    interstitial.addAdEventListener(AdEventType.ERROR, (err) => {
+      Alert.alert(
+        "There is an error occured on loading interstitial ad!",
+        err.message,
+        err.name
       );
-      interstitial.addAdEventListener(AdEventType.CLOSED, () => {
-        BackHandler.exitApp();
-      });
-      interstitial.addAdEventListener(AdEventType.ERROR, () => {
-        BackHandler.exitApp();
-      });
-      // Start loading the interstitial straight away
-      interstitial.load();
-      // Unsubscribe from events on unmount
-      return () => unsubscribe();
-    }, [navigation])
-  );
+      // BackHandler.exitApp();
+    });
+    // Start loading the interstitial straight away
+    interstitial.load();
+
+    // Unsubscribe from events on unmount
+    return () => unsubscribe();
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -97,11 +102,7 @@ const Home = () => {
           {
             text: "YES",
             onPress: () => {
-              if (interstitial?.loaded) {
-                interstitial?.show();
-              } else {
-                BackHandler.exitApp();
-              }
+              adLoad();
             },
           },
         ]);
@@ -355,7 +356,7 @@ const Home = () => {
             ) : (
               <FlatList
                 showsVerticalScrollIndicator={false}
-                data={userData.companies}
+                data={user?.companies}
                 numColumns={2}
                 renderItem={({ item, index }) => (
                   <View style={{ flex: 1, width: "100%" }}>
