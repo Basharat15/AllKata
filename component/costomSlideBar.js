@@ -13,6 +13,7 @@ import {
 } from "react-native";
 // import Slider from "react-native-slide-to-unlock";
 
+import Icon from "react-native-vector-icons/FontAwesome5";
 import Logout from "react-native-vector-icons/MaterialIcons";
 import { getAuth, signOut } from "firebase/auth";
 import theme from "./theme";
@@ -115,7 +116,7 @@ function CustomSidebarMenu(props) {
           You are logged in as {email}
         </Text>
       </View>
-      <View
+      <TouchableOpacity
         style={{
           width: "100%",
           height: 50,
@@ -124,6 +125,7 @@ function CustomSidebarMenu(props) {
           borderBottomColor: "gray",
           flexDirection: "row",
         }}
+        onPress={logOutUser}
       >
         <Logout
           name="logout"
@@ -137,11 +139,40 @@ function CustomSidebarMenu(props) {
             fontFamily: "monsterRegular",
             color: theme.colors.updatedColor,
           }}
-          onPress={logOutUser}
         >
           Logout
         </Text>
-      </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: "100%",
+          height: 50,
+          alignItems: "center",
+          borderBottomWidth: 0.5,
+          borderBottomColor: "gray",
+          flexDirection: "row",
+        }}
+        onPress={() => {
+          navigation.navigate("Profile");
+        }}
+      >
+        <Icon
+          name="user"
+          size={25}
+          style={{ marginLeft: 10 }}
+          color={theme.colors.updatedColor}
+        />
+        <Text
+          style={{
+            marginLeft: 5,
+            fontFamily: "monsterRegular",
+            color: theme.colors.updatedColor,
+          }}
+        >
+          {" "}
+          Profile
+        </Text>
+      </TouchableOpacity>
     </DrawerContentScrollView>
   );
 }

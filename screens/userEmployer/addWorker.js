@@ -649,6 +649,8 @@ const AddWorker = () => {
                 isTimePickerVisible={startTimeModal}
                 onConfirm={(time) => {
                   setStartTime(time);
+                  setEndTime("");
+                  setWorkHours("");
                   setStartTimeModal(false);
                 }}
                 onCancel={() => {

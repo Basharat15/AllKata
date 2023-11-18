@@ -12,6 +12,7 @@ import AddCompany from "./addCompany";
 import AddWorker from "./addWorker";
 import EmployeesList from "./EmployeesList";
 import EmployeesDetailsView from "./EmployeesDetailsView";
+import Profile from "./profile";
 
 const UserIndex = () => {
   const Drawer = createDrawerNavigator();
@@ -40,6 +41,7 @@ const DrawerNavigation = () => {
         name="EmployeesDetailsView"
         component={EmployeesDetailsView}
       />
+      <Drawer.Screen name="Profile" component={Profile} />
     </Drawer.Navigator>
   );
 };
