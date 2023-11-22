@@ -67,11 +67,11 @@ const Home = () => {
       BackHandler.exitApp();
     });
     interstitial.addAdEventListener(AdEventType.ERROR, (err) => {
-      Alert.alert(
-        "There is an error occured on loading interstitial ad!",
-        err.message
-      );
-      // BackHandler.exitApp();
+      // Alert.alert(
+      //   "There is an error occured on loading interstitial ad!",
+      //   err.message
+      // );
+      BackHandler.exitApp();
     });
     // Start loading the interstitial straight away
     interstitial.load();
