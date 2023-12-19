@@ -103,14 +103,14 @@ const Otp = ({ route }) => {
         .then(async (userCridintial) => {
           console.log(userCridintial.user.displayName);
           if (userCridintial.user.displayName != null) {
+            getUserData(userCridintial.user.uid);
+
             await AsyncStorage.setItem(
               "username",
               userCridintial.user.displayName
             )
-
               .then(() => {
                 console.log("username saved on page otp");
-                getUserData(userCridintial.user.uid);
               })
               .catch((error) =>
                 console.log("the error is on otp secure store", error)

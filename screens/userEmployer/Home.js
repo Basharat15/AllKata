@@ -31,6 +31,7 @@ import { FlatList } from "react-native-gesture-handler";
 import NetInfo from "@react-native-community/netinfo";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/actions/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -42,13 +43,14 @@ const Home = () => {
   const [Preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [user, setUser] = useState({});
   const [selectCompany, setSelctedCompany] = useState(
     "Please select a company"
   );
 
   // const adUnitId = TestIds.INTERSTITIAL;
   const adUnitId = "ca-app-pub-1446863291124897/9824658781";
-  const user = useSelector((state) => state.userReducer.user);
+
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
@@ -128,14 +130,16 @@ const Home = () => {
   }, []);
 
   const getUserData = async () => {
+    let userId = await AsyncStorage.getItem("userUniqueId");
     try {
       await firebase
         .firestore()
         .collection("Users")
-        .doc(user.userId)
+        .doc(userId)
         .get()
         .then((res) => {
           let data = res.data();
+          setUser(data);
           dispatch(setUser(data));
         });
     } catch {

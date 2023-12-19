@@ -649,8 +649,11 @@ const AddWorker = () => {
                 isTimePickerVisible={startTimeModal}
                 onConfirm={(time) => {
                   setStartTime(time);
-                  setEndTime("");
-                  setWorkHours("");
+                  // Reset endTime and workHours if they were already set
+                  if (endTime) {
+                    setEndTime("");
+                    setWorkHours("");
+                  }
                   setStartTimeModal(false);
                 }}
                 onCancel={() => {
@@ -660,14 +663,45 @@ const AddWorker = () => {
               <TimePicker
                 isTimePickerVisible={endTimeModal}
                 onConfirm={(time) => {
-                  let differece =
-                    (new Date(time) - new Date(startTime)) / 3600000;
-                  if (differece <= 0) {
+                  // Make sure startTime is set before comparing
+                  if (!startTime) {
+                    alert("Please select a start time first!");
                     setEndTimeModal(false);
-                    alert("End time cannot be less than start time!");
                     return;
                   }
-                  setWorkHours(differece);
+
+                  // Construct full Date objects for comparison
+                  const currentDate = new Date();
+                  const startDate = new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth(),
+                    currentDate.getDate(),
+                    new Date(startTime).getHours(),
+                    new Date(startTime).getMinutes()
+                  );
+                  const endDate = new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth(),
+                    currentDate.getDate(),
+                    new Date(time).getHours(),
+                    new Date(time).getMinutes()
+                  );
+
+                  // Adjust for crossing midnight
+                  if (endDate <= startDate) {
+                    endDate.setDate(endDate.getDate() + 1);
+                  }
+
+                  let difference = (endDate - startDate) / 3600000;
+                  if (difference <= 0) {
+                    alert(
+                      "End time cannot be less than or equal to start time!"
+                    );
+                    setEndTimeModal(false);
+                    return;
+                  }
+
+                  setWorkHours(difference);
                   setEndTime(time);
                   setEndTimeModal(false);
                 }}

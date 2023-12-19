@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Time Vault",
-    "slug": "TimeVault",
+    "slug": "allKata",
     "version": "49.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon2.png",
@@ -21,7 +21,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.junaidanwar.allKata",
-      "versionCode": 1
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -37,7 +37,7 @@ const Login = () => {
       setError("please enter your phone number");
     } else if (!countryCode) {
       setError("please select country");
-    } else if (number.length < 9) {
+    } else if (number.length < 7) {
       setError("please enter valid number");
     } else {
       navigation.navigate("otp", {
@@ -59,13 +59,13 @@ const Login = () => {
     <View
       style={{
         flex: 1,
-        backgroundColor:theme.colors.updatedColor,
+        backgroundColor: theme.colors.updatedColor,
       }}
     >
       <ScrollView>
         <LinearGradient
           // Background Linear Gradient
-          colors={[theme.colors.updatedColor, theme.colors.updatedColor,]}
+          colors={[theme.colors.updatedColor, theme.colors.updatedColor]}
           style={{ flex: 1 }}
         >
           <Image
@@ -168,8 +168,13 @@ const Login = () => {
                     setNumber(text);
                   }}
                   keyboardType="numeric"
-                  placeholder="Enter Phone Number" placeholderTextColor={'white'}
-                  style={{ fontFamily: "monsterRegular", marginLeft: 10,color: 'white' }}
+                  placeholder="Enter Phone Number"
+                  placeholderTextColor={"white"}
+                  style={{
+                    fontFamily: "monsterRegular",
+                    marginLeft: 10,
+                    color: "white",
+                  }}
                 />
               </View>
             </View>
@@ -225,7 +230,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     alignItems: "center",
     justifyContent: "space-between",
-    borderColor:"#ffffff",
+    borderColor: "#ffffff",
   },
   textInput: {
     width: "78%",
